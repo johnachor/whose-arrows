@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace whose_arrows.Controllers
+namespace WhoseArrows.Controllers
 {
     [Route("api/[controller]")]
     public class SampleDataController : Controller
