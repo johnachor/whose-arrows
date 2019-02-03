@@ -3,16 +3,16 @@ using System.Data.SqlClient;
 
 namespace WhoseArrows
 {
-	public class SQLMaker
+	public static class SQLConnectionFactory
 	{
-		private string _connectionString;
+		public static string _connectionString { get; private set; }
 
-		public SQLMaker(string connectionString)
+		public static void SetConnectionString (string connectionString)
 		{
 			_connectionString = connectionString;
 		}
 
-		public SqlConnection New()
+		public static SqlConnection New()
 		{
 			return new SqlConnection(_connectionString);
 		}

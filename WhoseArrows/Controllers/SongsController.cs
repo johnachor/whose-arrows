@@ -11,19 +11,14 @@ namespace WhoseArrows.Controllers
     [Route("api/[controller]")]
     public class SongsController : Controller
     {
-		SQLMaker _sql;
 		SongsAccess _songs;
 
-		public SongsController(SQLMaker sql)
+		public SongsController()
 		{
-			_sql = sql;
-			_songs = new SongsAccess(_sql);
+			_songs = new SongsAccess();
 		}
 
         [HttpGet]
-		public async Task<ActionResult<IEnumerable<Song>>> GetAllSongs ()
-		{
-			return Ok(await _songs.GetAllSongs());
-		}
-    }
+		public async Task<IEnumerable<Song>> GetAllSongs () => await _songs.GetAllSongs();
+	}
 }

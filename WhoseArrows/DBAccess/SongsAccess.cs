@@ -9,16 +9,9 @@ namespace WhoseArrows.DBAccess
 {
 	public class SongsAccess
 	{
-		SQLMaker _sql;
-
-		public SongsAccess(SQLMaker sql)
-		{
-			_sql = sql;
-		}
-
 		public async Task<IEnumerable<Song>> GetAllSongs()
 		{
-			using (var db = _sql.New())
+			using (var db = SQLConnectionFactory.New())
 			{
 				return await db.QueryAsync<Song>("SELECT * FROM Songs");
 			}
