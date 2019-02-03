@@ -28,8 +28,7 @@ namespace WhoseArrows
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-			var sqlMaker = new SQLMaker(Configuration.GetSection("ConnectionString").Value);
-			services.AddSingleton<SQLMaker>(sqlMaker);
+			SQLConnectionFactory.SetConnectionString(Configuration.GetSection("ConnectionString").Value);
 
 			services
 				.AddCors()
