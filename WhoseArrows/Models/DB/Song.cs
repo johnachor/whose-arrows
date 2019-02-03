@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WhoseArrows.DBModels
+namespace WhoseArrows.Models.DB
 {
 	public class Song
 	{

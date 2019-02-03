@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WhoseArrows.DBAccess;
-using WhoseArrows.DBModels;
+using WhoseArrows.Models.DB;
 
 namespace WhoseArrows.Controllers
 {
