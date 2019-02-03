@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WhoseArrows.DBModels;
+using WhoseArrows.Models.DB;
 using Dapper;
 
 namespace WhoseArrows.DBAccess
