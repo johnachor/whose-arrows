@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WhoseArrows.DBAccess;
 using WhoseArrows.Models.DB;
+using WhoseArrows.Models.Request;
 
 namespace WhoseArrows.Controllers
 {
@@ -16,6 +17,6 @@ namespace WhoseArrows.Controllers
 		private static AdminAccess _admin = new AdminAccess();
 
 		[HttpPost("question")]
-		public async Task<ActionResult<Question>> AddNewQuestion(Question newQuestion) => Ok(await _admin.AddNewQuestion(newQuestion));
+		public async Task<ActionResult<QuestionAndHints>> AddNewQuestion(QuestionAndHints newQuestion) => Ok(await _admin.AddNewQuestionWithHints(newQuestion));
     }
 }
