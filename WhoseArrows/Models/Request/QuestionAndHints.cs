@@ -12,7 +12,7 @@ namespace WhoseArrows.Models.Request
 
 		public QuestionAndHints(Question baseQuestion)
 		{
-			this.Id = baseQuestion.Id;
+			this.QuestionId = baseQuestion.QuestionId;
 			this.ImageUrl = baseQuestion.ImageUrl;
 			this.SerializedSteps = baseQuestion.SerializedSteps;
 			this.CorrectAnswer = baseQuestion.CorrectAnswer;

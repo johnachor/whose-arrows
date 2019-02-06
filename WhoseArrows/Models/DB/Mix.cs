@@ -7,7 +7,7 @@ namespace WhoseArrows.Models.DB
 {
 	public class Mix
 	{
-		public long Id { get; set; }
+		public long MixId { get; set; }
 		public string Title { get; set; }
 		public DateTime ReleaseDate { get; set; }
 	}

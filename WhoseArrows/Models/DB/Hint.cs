@@ -7,7 +7,7 @@ namespace WhoseArrows.Models.DB
 {
 	public class Hint
 	{
-		public long Id { get; set; }
+		public long HintId { get; set; }
 		public long QuestionId { get; set; }
 		public string HintText { get; set; }
 		public int HintOrder { get; set; }
