@@ -7,8 +7,8 @@ namespace WhoseArrows.Models.DB
 {
 	public class Session
 	{
-		public long Id { get; set; }
-		public Guid SessionId { get; set; }
+		public long SessionId { get; set; }
+		public Guid SessionGuid { get; set; }
 		public int SessionLength { get; set; }
 		public long? PlayerId { get; set; }
 		public string AnonPlayerName { get; set; }

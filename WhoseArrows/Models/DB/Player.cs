@@ -7,7 +7,7 @@ namespace WhoseArrows.Models.DB
 {
 	public class Player
 	{
-		public long Id { get; set; }
+		public long PlayerId { get; set; }
 		public string Name { get; set; }
 		public string FirebaseId { get; set; }
 		public bool IsAdmin { get; set; }

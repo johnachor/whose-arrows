@@ -7,7 +7,7 @@ namespace WhoseArrows.Models.DB
 {
 	public class SessionQuestion
 	{
-		public long Id { get; set; }
+		public long SessionQuestionId { get; set; }
 		public long SessionId { get; set; }
 		public long QuestionId { get; set; }
 		public int HintsShown { get; set; }

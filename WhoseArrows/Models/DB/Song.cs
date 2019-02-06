@@ -7,7 +7,7 @@ namespace WhoseArrows.Models.DB
 {
 	public class Song
 	{
-		public long Id { get; set; }
+		public long SongId { get; set; }
 		public long FirstAppeared { get; set; }
 		public string Title { get; set; }
 		public string TitleRomanized { get; set; }
