@@ -36,30 +36,6 @@ namespace WhoseArrows.DBAccess
 			}
 		}
 
-		public async Task<Mix> AddNewMix (Mix newMix)
-		{
-			using (var db = SQLConnectionFactory.New())
-			{
-				var newMixString = @"INSERT INTO Mixes (Title, ReleaseDate)
-										OUTPUT INSERTED.*
-										VALUES (@Title, @ReleaseDate)";
-
-				return await db.QueryFirstOrDefaultAsync<Mix>(newMixString, newMix);
-			}
-		}
-
-		public async Task<Song> AddNewSong (Song newSong)
-		{
-			using (var db = SQLConnectionFactory.New())
-			{
-				var newSongString = @"INSERT INTO Songs (FirstAppeared, Title, TitleRomanized, Artist, ArtistRomanized)
-										OUTPUT INSERTED.*
-										VALUES (@FirstAppeared, @Title, @TitleRomanized, @Artist, @ArtistRomanized)";
-
-				return await db.QueryFirstOrDefaultAsync<Song>(newSongString, newSong);
-			}
-		}
-
 		public async Task<QuestionAndHints> AddNewQuestionWithHints(QuestionAndHints newQuestion)
 		{
 			var createdQuestion = await AddNewQuestion(newQuestion);
