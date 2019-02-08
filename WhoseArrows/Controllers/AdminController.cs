@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WhoseArrows.DBAccess;
@@ -14,7 +15,7 @@ namespace WhoseArrows.Controllers
     [ApiController]
     public class AdminController : ControllerBase
     {
-		private static AdminAccess _admin = new AdminAccess();
+		private static AdminService _admin = new AdminService();
 
 		[HttpPost("question")]
 		public async Task<ActionResult<QuestionAndHints>> AddNewQuestion(QuestionAndHints newQuestion) => Ok(await _admin.AddNewQuestionWithHints(newQuestion));

@@ -6,7 +6,7 @@ using WhoseArrows.Models.DB;
 
 namespace WhoseArrows.DBAccess.Interface
 {
-	interface IPlayerAccess
+	interface IGameService
 	{
 		// Single DB object insertion methods
 		Task<Player>			AddNewPlayer			(Player newPlayer);
@@ -17,7 +17,7 @@ namespace WhoseArrows.DBAccess.Interface
 		Task<Player>	DeletePlayer	(long playerId);
 		Task<Session>	DeleteSession	(long sessionId);
 
-		// Entry points for main operations
+		// Other operations
 		Task<Question>	PlayerGuess			(long sessionQuestionId, long songId);
 		Task<Hint>		GetHint				(long sessionQuestionId);
 		Task<Session>	AddAnonPlayerName	(long sessionId, string anonPlayerName);

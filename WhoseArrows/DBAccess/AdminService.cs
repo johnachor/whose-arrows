@@ -9,7 +9,7 @@ using WhoseArrows.Models.Request;
 
 namespace WhoseArrows.DBAccess
 {
-	public class AdminAccess : IAdminAccess
+	public class AdminService : IAdminService
 	{
 
 		public async Task<Question> AddNewQuestion (Question newQuestion)
@@ -33,6 +33,30 @@ namespace WhoseArrows.DBAccess
 										VALUES (@QuestionId, @HintText, @HintOrder)";
 
 				return await db.QueryFirstOrDefaultAsync<Hint>(newHintString, newHint);
+			}
+		}
+
+		public async Task<Question> DeleteQuestion (long questionId)
+		{
+			using (var db = SQLConnectionFactory.New())
+			{
+				var deleteQuestionString = @"DELETE FROM Questions 
+												OUTPUT DELETED.* 
+												WHERE QuestionId = @questionId";
+
+				return await db.QueryFirstOrDefaultAsync<Question>(deleteQuestionString, new { questionId });
+			}
+		}
+
+		public async Task<Player> DeletePlayer(long playerId)
+		{
+			using (var db = SQLConnectionFactory.New())
+			{
+				var deletePlayerString = @"DELETE FROM Players 
+											OUTPUT DELETED.* 
+											WHERE PlayerId = @playerId";
+
+				return await db.QueryFirstOrDefaultAsync<Player>(deletePlayerString, new { playerId });
 			}
 		}
 
