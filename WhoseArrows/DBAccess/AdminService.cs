@@ -11,7 +11,6 @@ namespace WhoseArrows.DBAccess
 {
 	public class AdminService : IAdminService
 	{
-
 		public async Task<Question> AddNewQuestion (Question newQuestion)
 		{
 			using (var db = SQLConnectionFactory.New())

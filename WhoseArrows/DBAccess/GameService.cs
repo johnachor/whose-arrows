@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WhoseArrows.DBAccess.Interface;
 using WhoseArrows.Models.DB;
 using WhoseArrows.Models.Request;
+using WhoseArrows.Models.Response;
 
 namespace WhoseArrows.DBAccess
 {
@@ -77,6 +78,16 @@ namespace WhoseArrows.DBAccess
 			}
 		}
 
+		public async Task<int> AddPlayerAnswerToQuestion(long sessionQuestionId, long givenAnswer)
+		{
+			using (var db = SQLConnectionFactory.New())
+			{
+				var updateAnswerString = @"UPDATE SessionQuestion
+											SET GivenAnswer = @givenAnswer
+											WHERE SessionQuestionId = @sessionQuestionId";
 
+				return await db.ExecuteAsync(updateAnswerString, new { sessionQuestionId, givenAnswer });
+			}
+		}
 	}
 }
