@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WhoseArrows.Models.DB;
+using WhoseArrows.Models.Request;
 
 namespace WhoseArrows.DBAccess.Interface
 {
 	interface IGameService
 	{
 		// Single DB object insertion methods
-		Task<Player>			AddNewPlayer			(Player newPlayer);
+		Task<Player>			AddNewPlayer			(NewPlayerRequest newPlayer);
 		Task<Session>			AddNewSession			(Session newSession);
 		Task<SessionQuestion>	AddNewSessionQuestion	(SessionQuestion newSessionQuestion);
 
