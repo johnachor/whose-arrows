@@ -9,16 +9,17 @@ using WhoseArrows.Models.Request;
 
 namespace WhoseArrows.DBAccess
 {
-	public class AdminAccess : IAdminAccess
+	public class AdminService : IAdminService
 	{
-
 		public async Task<Question> AddNewQuestion (Question newQuestion)
 		{
 			using (var db = SQLConnectionFactory.New())
 			{
-				var questionString = @"INSERT INTO Questions (CorrectAnswer, ImageUrl, SerializedSteps)
+				var questionString = @"INSERT INTO Questions 
+											(CorrectAnswer, ImageUrl, SerializedSteps)
 										OUTPUT INSERTED.*
-										VALUES (@CorrectAnswer, @ImageUrl, @SerializedSteps)";
+										VALUES 
+											(@CorrectAnswer, @ImageUrl, @SerializedSteps)";
 
 				return await db.QueryFirstOrDefaultAsync<Question>(questionString, newQuestion);
 			}
@@ -28,11 +29,37 @@ namespace WhoseArrows.DBAccess
 		{
 			using (var db = SQLConnectionFactory.New())
 			{
-				var newHintString = @"INSERT INTO Hints (QuestionId, HintText, HintOrder)
+				var newHintString = @"INSERT INTO Hints 
+											(QuestionId, HintText, HintOrder)
 										OUTPUT INSERTED.*
-										VALUES (@QuestionId, @HintText, @HintOrder)";
+										VALUES 
+											(@QuestionId, @HintText, @HintOrder)";
 
 				return await db.QueryFirstOrDefaultAsync<Hint>(newHintString, newHint);
+			}
+		}
+
+		public async Task<Question> DeleteQuestion (long questionId)
+		{
+			using (var db = SQLConnectionFactory.New())
+			{
+				var deleteQuestionString = @"DELETE FROM Questions 
+												OUTPUT DELETED.* 
+												WHERE QuestionId = @questionId";
+
+				return await db.QueryFirstOrDefaultAsync<Question>(deleteQuestionString, new { questionId });
+			}
+		}
+
+		public async Task<Player> DeletePlayer(long playerId)
+		{
+			using (var db = SQLConnectionFactory.New())
+			{
+				var deletePlayerString = @"DELETE FROM Players 
+											OUTPUT DELETED.* 
+											WHERE PlayerId = @playerId";
+
+				return await db.QueryFirstOrDefaultAsync<Player>(deletePlayerString, new { playerId });
 			}
 		}
 

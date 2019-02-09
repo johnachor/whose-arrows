@@ -31,7 +31,6 @@ namespace WhoseArrows
 			SQLConnectionFactory.SetConnectionString(Configuration.GetSection("ConnectionString").Value);
 
 			services
-				.AddCors()
 				.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 				.AddJwtBearer(options =>
 				{
@@ -71,10 +70,6 @@ namespace WhoseArrows
 
 			app.UseAuthentication();
             app.UseHttpsRedirection();
-			app.UseCors(builder =>
-			{
-				builder.WithOrigins("*").WithMethods("*").WithHeaders("*");
-			});
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 

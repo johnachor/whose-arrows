@@ -5,31 +5,40 @@ import { LinkContainer } from 'react-router-bootstrap';
 import './NavMenu.css';
 
 export default props => (
-  <Navbar inverse fixedTop fluid collapseOnSelect>
-    <Navbar.Header>
-      <Navbar.Brand>
-        <Link to={'/'}>WhoseArrows</Link>
-      </Navbar.Brand>
-      <Navbar.Toggle />
-    </Navbar.Header>
-    <Navbar.Collapse>
-      <Nav>
-        <LinkContainer to={'/'} exact>
-          <NavItem>
-            <Glyphicon glyph='home' /> Home
-          </NavItem>
-        </LinkContainer>
-        <LinkContainer to={'/counter'}>
-          <NavItem>
-            <Glyphicon glyph='education' /> Counter
-          </NavItem>
-        </LinkContainer>
-        <LinkContainer to={'/fetchdata'}>
-          <NavItem>
-            <Glyphicon glyph='th-list' /> Fetch data
-          </NavItem>
-        </LinkContainer>
-      </Nav>
-    </Navbar.Collapse>
-  </Navbar>
+	<Navbar inverse fixedTop fluid collapseOnSelect>
+		<Navbar.Header>
+			<Navbar.Brand>
+				<Link to={'/'}>WhoseArrows</Link>
+			</Navbar.Brand>
+			<Navbar.Toggle />
+		</Navbar.Header>
+		<Navbar.Collapse>
+			<Nav>
+				<LinkContainer to={'/game'}>
+					<NavItem>
+						<Glyphicon glyph='arrow-left' />
+						<Glyphicon glyph='arrow-down' />
+						<Glyphicon glyph='arrow-up' />
+						<Glyphicon glyph='arrow-right' />
+						Game
+					</NavItem>
+				</LinkContainer>
+				<LinkContainer to={'/highscores'}>
+					<NavItem>
+						<Glyphicon glyph='list-alt' /> High Scores
+					</NavItem>
+				</LinkContainer>
+				<LinkContainer to={'/mystats'}>
+					<NavItem>
+						<Glyphicon glyph='user' /> My Stats
+					</NavItem>
+				</LinkContainer>
+				<LinkContainer to={'/admin'}>
+					<NavItem>
+						<Glyphicon glyph='eye-open' /> Admin Tools
+					</NavItem>
+				</LinkContainer>
+			</Nav>
+		</Navbar.Collapse>
+	</Navbar>
 );
