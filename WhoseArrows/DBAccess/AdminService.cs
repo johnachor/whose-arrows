@@ -16,9 +16,11 @@ namespace WhoseArrows.DBAccess
 		{
 			using (var db = SQLConnectionFactory.New())
 			{
-				var questionString = @"INSERT INTO Questions (CorrectAnswer, ImageUrl, SerializedSteps)
+				var questionString = @"INSERT INTO Questions 
+											(CorrectAnswer, ImageUrl, SerializedSteps)
 										OUTPUT INSERTED.*
-										VALUES (@CorrectAnswer, @ImageUrl, @SerializedSteps)";
+										VALUES 
+											(@CorrectAnswer, @ImageUrl, @SerializedSteps)";
 
 				return await db.QueryFirstOrDefaultAsync<Question>(questionString, newQuestion);
 			}
@@ -28,9 +30,11 @@ namespace WhoseArrows.DBAccess
 		{
 			using (var db = SQLConnectionFactory.New())
 			{
-				var newHintString = @"INSERT INTO Hints (QuestionId, HintText, HintOrder)
+				var newHintString = @"INSERT INTO Hints 
+											(QuestionId, HintText, HintOrder)
 										OUTPUT INSERTED.*
-										VALUES (@QuestionId, @HintText, @HintOrder)";
+										VALUES 
+											(@QuestionId, @HintText, @HintOrder)";
 
 				return await db.QueryFirstOrDefaultAsync<Hint>(newHintString, newHint);
 			}
