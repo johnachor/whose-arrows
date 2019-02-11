@@ -1,10 +1,11 @@
 ﻿import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Glyphicon, Nav, Navbar, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import './NavMenu.css';
 
-export default props => (
+const NavMenu = props => (
 	<Navbar inverse fixedTop fluid collapseOnSelect>
 		<Navbar.Header>
 			<Navbar.Brand>
@@ -14,6 +15,11 @@ export default props => (
 		</Navbar.Header>
 		<Navbar.Collapse>
 			<Nav>
+				<LinkContainer to={'/auth'}>
+					<NavItem>
+						<Glyphicon glyph='user' /> Auth
+					</NavItem>
+				</LinkContainer>
 				<LinkContainer to={'/game'}>
 					<NavItem>
 						<Glyphicon glyph='arrow-left' />
@@ -28,11 +34,14 @@ export default props => (
 						<Glyphicon glyph='list-alt' /> High Scores
 					</NavItem>
 				</LinkContainer>
-				<LinkContainer to={'/mystats'}>
-					<NavItem>
-						<Glyphicon glyph='user' /> My Stats
-					</NavItem>
-				</LinkContainer>
+				{props.user.uid
+					? <LinkContainer to={'/mystats'}>
+						<NavItem>
+							<Glyphicon glyph='user' /> My Stats
+						</NavItem>
+					</LinkContainer>
+					: null}
+
 				<LinkContainer to={'/admin'}>
 					<NavItem>
 						<Glyphicon glyph='eye-open' /> Admin Tools
@@ -42,3 +51,5 @@ export default props => (
 		</Navbar.Collapse>
 	</Navbar>
 );
+
+export default connect(state => state.auth)(NavMenu);

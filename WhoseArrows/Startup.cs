@@ -18,6 +18,7 @@ namespace WhoseArrows
 				.SetBasePath(env.ContentRootPath)
 				.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
 				.AddJsonFile("db.json", optional: false, reloadOnChange: true)
+				.AddJsonFile("auth.json", optional: false, reloadOnChange: true)
 				.AddEnvironmentVariables();
 
 			Configuration = builder.Build();
@@ -35,13 +36,13 @@ namespace WhoseArrows
 				.AddJwtBearer(options =>
 				{
 					options.IncludeErrorDetails = true;
-					options.Authority = "";
+					options.Authority = Configuration.GetSection("Authority").Value;
 					options.TokenValidationParameters = new TokenValidationParameters
 					{
 						ValidateIssuer = true,
-						ValidIssuer = "",
+						ValidIssuer = Configuration.GetSection("ValidIssuer").Value,
 						ValidateAudience = true,
-						ValidAudience = "",
+						ValidAudience = Configuration.GetSection("ValidAudience").Value,
 						ValidateLifetime = true
 					};
 				});

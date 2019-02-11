@@ -233,5 +233,7 @@ _Pvt_Extensions
 # FAKE - F# Make
 .fake/
 
-# Connection string configuration file
+# Deployment specific connection data
 db.json
+auth.json
+ClientApp/src/constants.json
