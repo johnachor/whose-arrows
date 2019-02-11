@@ -15,14 +15,14 @@ class Home extends React.Component {
 
 		const songsTable = this.state.songs.map(song => {
 			return (
-				<tr><td>{song.title}</td><td>{song.artist}</td></tr>
+				<tr key={song.songId}><td>{song.title}</td><td>{song.titleRomanized}</td><td>{song.artist}</td></tr>
 			);
 		});
 						
 		return (
 			<div>
 				<h1>I haz sum songz from da database</h1>
-				<table>{songsTable}</table>
+				<table><tbody>{songsTable}</tbody></table>
 			</div>
 		);
 	}
