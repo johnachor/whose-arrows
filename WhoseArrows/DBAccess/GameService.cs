@@ -89,5 +89,28 @@ namespace WhoseArrows.DBAccess
 				return await db.ExecuteAsync(updateAnswerString, new { sessionQuestionId, givenAnswer });
 			}
 		}
+
+		public async Task<Player> GetPlayerByFirebaseId (string firebaseId)
+		{
+			using (var db = SQLConnectionFactory.New())
+			{
+				var getPlayerString = "SELECT * FROM Players WHERE FirebaseId = @firebaseId";
+
+				return await db.QueryFirstOrDefaultAsync<Player>(getPlayerString, new { firebaseId });
+			}
+		}
+
+		public async Task<Player> Login (string firebaseId)
+		{
+			var existingPlayer = await GetPlayerByFirebaseId(firebaseId);
+			if (existingPlayer != default(Player))
+			{
+				return existingPlayer;
+			}
+			else
+			{
+				return await AddNewPlayer(new NewPlayerRequest { Name = "John", FirebaseId = firebaseId });
+			}
+		}
 	}
 }

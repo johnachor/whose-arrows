@@ -20,6 +20,7 @@ namespace WhoseArrows.DBAccess.Interface
 		Task<Session>	DeleteSession	(long sessionId);
 
 		// Other operations
+		Task<Player>					Login				(string firebaseId);
 //		Task<NewQuestionResponse>		PlayerGuess			(long sessionQuestionId, long songId);
 //		Task<Hint>						GetHint				(long sessionQuestionId);
 //		Task<Session>					AddPlayerIdToSession(long sessionId, long playerId);

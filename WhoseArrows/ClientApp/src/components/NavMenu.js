@@ -41,12 +41,13 @@ const NavMenu = props => (
 						</NavItem>
 					</LinkContainer>
 					: null}
-
-				<LinkContainer to={'/admin'}>
-					<NavItem>
-						<Glyphicon glyph='eye-open' /> Admin Tools
+				{props.player.isAdmin ?
+					<LinkContainer to={'/admin'}>
+						<NavItem>
+							<Glyphicon glyph='eye-open' /> Admin Tools
 					</NavItem>
-				</LinkContainer>
+					</LinkContainer>
+					: null}
 			</Nav>
 		</Navbar.Collapse>
 	</Navbar>

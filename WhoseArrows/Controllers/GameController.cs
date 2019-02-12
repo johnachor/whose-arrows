@@ -8,18 +8,17 @@ using Microsoft.AspNetCore.Mvc;
 using WhoseArrows.DBAccess;
 using WhoseArrows.DBAccess.Interface;
 using WhoseArrows.Models.DB;
-using WhoseArrows.Models.Request;
 
 namespace WhoseArrows.Controllers
 {
     [Route("api/[controller]")]
     [ApiController, Authorize]
-    public class AdminController : ControllerBase
+    public class GameController : ControllerBase
     {
-		private static IAdminService _admin = new AdminService();
+		private static IGameService _game = new GameService();
 
-		[HttpPost("question")]
-		public async Task<QuestionAndHints> AddNewQuestion(QuestionAndHints newQuestion) 
-			=> await _admin.AddNewQuestionWithHints(newQuestion);
+		[HttpPost("login")]
+		public async Task<Player> Login([FromHeader] string firebaseId)
+			=> await _game.Login(firebaseId);
     }
 }
