@@ -11,6 +11,15 @@ namespace WhoseArrows.DBAccess
 {
 	public class AdminService : IAdminService
 	{
+		static GameService _game = new GameService();
+
+		public async Task<bool> VerifyAdmin(string firebaseId)
+		{
+			var currentPlayer = await _game.GetPlayerByFirebaseId(firebaseId);
+
+			return currentPlayer.IsAdmin;
+		}
+
 		public async Task<Question> AddNewQuestion (Question newQuestion)
 		{
 			using (var db = SQLConnectionFactory.New())
@@ -63,26 +72,86 @@ namespace WhoseArrows.DBAccess
 			}
 		}
 
-		public async Task<QuestionAndHints> AddNewQuestionWithHints(QuestionAndHints newQuestion)
+		public async Task<IEnumerable<Question>> GetAllQuestions(string firebaseId)
 		{
-			var createdQuestion = await AddNewQuestion(newQuestion);
-			if (createdQuestion == default(Question)) return null;
+			if (await VerifyAdmin(firebaseId))
+			{
+				using (var db = SQLConnectionFactory.New())
+				{
+					return await db.QueryAsync<Question>("SELECT * FROM Questions");
+				}
+			}
+			else
+			{
+				return null;
+			}
+		}
 
-			var responseQuestion = new QuestionAndHints(createdQuestion);
+		public async Task<IEnumerable<Hint>> GetAllHints(string firebaseId)
+		{
+			if (await VerifyAdmin(firebaseId))
+			{
+				using (var db = SQLConnectionFactory.New())
+				{
+					return await db.QueryAsync<Hint>("SELECT * FROM Hints");
+				}
+			}
+			else
+			{
+				return null;
+			}
+		}
 
-			var hints = newQuestion.Hints
-				.Select(x => AddQuestionIdToHint(x, responseQuestion))
-				.Select(async x => await AddNewHint(x));
+		public async Task<QuestionAndHints> AddNewQuestionWithHints(QuestionAndHints newQuestion, string firebaseId)
+		{
+			if (await VerifyAdmin(firebaseId))
+			{
+				var createdQuestion = await AddNewQuestion(newQuestion);
+				if (createdQuestion == default(Question)) return null;
 
-			responseQuestion.Hints = await Task.WhenAll(hints);
+				var responseQuestion = new QuestionAndHints(createdQuestion);
 
-			return responseQuestion;
+				var hints = newQuestion.Hints
+					.Select(x => AddQuestionIdToHint(x, responseQuestion))
+					.Select(async x => await AddNewHint(x));
+
+				responseQuestion.Hints = await Task.WhenAll(hints);
+
+				return responseQuestion;
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		public Hint AddQuestionIdToHint(Hint hint, Question question)
 		{
 			hint.QuestionId = question.QuestionId;
 			return hint;
+		}
+
+		public QuestionAndHints AddHintsToQuestion (Question q, IEnumerable<Hint> hs)
+		{
+			return new QuestionAndHints(q)
+			{
+				Hints = hs
+			};
+		}
+
+		public async Task<IEnumerable<QuestionAndHints>> GetAllQuestionsAndHints(string firebaseId)
+		{
+			if(await VerifyAdmin(firebaseId))
+			{
+				var qs = await GetAllQuestions(firebaseId);
+				var hs = await GetAllHints(firebaseId);
+
+				return qs.Select(x => AddHintsToQuestion(x, hs.Where(y => y.QuestionId == x.QuestionId)));
+			}
+			else
+			{
+				return null;
+			}
 		}
 	}
 }

@@ -34,6 +34,11 @@ class AuthForm extends React.Component {
 		this.props.register(user.email, user.password);
 	}
 
+	apiLogin = (e) => {
+		e.preventDefault();
+		this.props.apiLogin();
+	}
+
 	render() {
 		return (
 			<div className='LoginForm'>
@@ -56,6 +61,7 @@ class AuthForm extends React.Component {
 							}
 							<button onClick={this.submitLogin} className="btn btn-primary">Login</button>
 							<button onClick={this.submitRegister} className="btn btn-primary">Register</button>
+							<button onClick={this.apiLogin} className="btn btn-primary">API Login</button>
 						</form>
 					</div>
 				</div>
@@ -65,6 +71,6 @@ class AuthForm extends React.Component {
 }
 
 export default connect(
-	state => state.auth.user,
+	state => state.auth,
 	dispatch => bindActionCreators(actionCreators, dispatch)
 )(AuthForm);

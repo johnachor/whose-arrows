@@ -10,6 +10,9 @@ namespace WhoseArrows.DBAccess.Interface
 {
 	public interface IAdminService
 	{
+		// Verify request came from an admin
+		Task<bool>		VerifyAdmin		(string firebaseId);
+
 		// Single DB object insertion methods
 		Task<Question>	AddNewQuestion	(Question newQuestion);
 		Task<Hint>		AddNewHint		(Hint newHint);
@@ -19,6 +22,7 @@ namespace WhoseArrows.DBAccess.Interface
 		Task<Player>	DeletePlayer	(long id);
 		
 		// Entry points for main operations
-		Task<QuestionAndHints>	AddNewQuestionWithHints	(QuestionAndHints newQuestion);
+		Task<QuestionAndHints>	AddNewQuestionWithHints	(QuestionAndHints newQuestion, string firebaseId);
+		Task<IEnumerable<QuestionAndHints>> GetAllQuestionsAndHints(string firebaseId);
 	}
 }

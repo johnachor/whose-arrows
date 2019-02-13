@@ -6,18 +6,24 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WhoseArrows.DBAccess;
+using WhoseArrows.DBAccess.Interface;
 using WhoseArrows.Models.DB;
 using WhoseArrows.Models.Request;
 
 namespace WhoseArrows.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController,Authorize]
     public class AdminController : ControllerBase
     {
-		private static AdminService _admin = new AdminService();
+		private static IAdminService _admin = new AdminService();
 
-		[HttpPost("question")]
-		public async Task<ActionResult<QuestionAndHints>> AddNewQuestion(QuestionAndHints newQuestion) => Ok(await _admin.AddNewQuestionWithHints(newQuestion));
+		[HttpPost("questions")]
+		public async Task<QuestionAndHints> AddNewQuestion(QuestionAndHints newQuestion, [FromHeader] string firebaseId) 
+			=> await _admin.AddNewQuestionWithHints(newQuestion, firebaseId);
+
+		[HttpGet("questions")]
+		public async Task<IEnumerable<QuestionAndHints>> GetAllQuestionsAndHints([FromHeader] string firebaseId)
+			=> await _admin.GetAllQuestionsAndHints(firebaseId);
     }
 }

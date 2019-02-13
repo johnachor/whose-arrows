@@ -3,7 +3,12 @@ const loginType = 'REQUEST_FIREBASE_AUTH';
 const logoutType = 'REQUEST_FIREBASE_UNAUTH';
 const registerType = 'REQUEST_FIREBASE_REGISTER';
 const authType = 'RECEIVE_FIREBASE_RESPONSE';
-const initialState = { user: {}, isLoading: false };
+const apiLoginType = 'API_LOGIN'
+const initialState = {
+	user: {},
+	player: {},
+	isLoading: false
+};
 
 
 export const actionCreators = {
@@ -26,12 +31,22 @@ export const actionCreators = {
 	logout: () => (dispatch) => {
 		firebase.signOut();
 		dispatch(logoutType);
+	},
+
+	apiLogin: () => {
+		return {
+			type: apiLoginType,
+			payload: {
+				request: {
+					method: 'post',
+					url: 'game/login'
+				}
+			}
+		};
 	}
 };
 
 export const reducer = (state, action) => {
-	console.log(action);
-
 	state = state || initialState;
 
 	if (action.type === loginType || action.type === registerType) {
@@ -43,7 +58,6 @@ export const reducer = (state, action) => {
 	}
 
 	if (action.type === logoutType) {
-		
 		return {
 			...state,
 			user: {},
@@ -58,6 +72,21 @@ export const reducer = (state, action) => {
 			isLoading: false
 		}
 	}
-	console.log(state);
+
+	if (action.type === apiLoginType) {
+		return {
+			...state,
+			player: {},
+			isLoading: true
+		}
+	}
+
+	if (action.type === 'API_LOGIN_SUCCESS') {
+		return {
+			...state,
+			player: action.payload.data,
+			isLoading: false
+		}
+	}
 	return state;
 };
