@@ -12,7 +12,7 @@ class Home extends React.Component {
 
 		const songsTable = this.props.songs.map(song => {
 			return (
-				<tr key={song.songId}><td>{song.title}</td><td>{song.titleRomanized}</td><td>{song.artist}</td></tr>
+				<tr key={song.songId}><td>{song.songId}</td><td>{song.title}</td><td>{song.titleRomanized}</td><td>{song.artist}</td></tr>
 			);
 		});
 						

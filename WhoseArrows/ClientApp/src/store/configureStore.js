@@ -6,6 +6,7 @@ import { routerReducer, routerMiddleware } from 'react-router-redux';
 import reduxImmutableStateInvariant from 'redux-immutable-state-invariant';
 import * as Auth from './Auth';
 import * as Songs from './Songs';
+import * as AdminInterface from './AdminInterface';
 
 const client = axios.create({
 	baseURL: '/api/',
@@ -35,7 +36,8 @@ const axiosMiddlewareConfig = {
 export default function configureStore(history, initialState) {
 	const reducers = {
 		auth: Auth.reducer,
-		songs: Songs.reducer
+		songs: Songs.reducer,
+		admin: AdminInterface.reducer
 	};
 
 	const middleware = [

@@ -13,13 +13,17 @@ using WhoseArrows.Models.Request;
 namespace WhoseArrows.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController, Authorize]
+    [ApiController,Authorize]
     public class AdminController : ControllerBase
     {
 		private static IAdminService _admin = new AdminService();
 
-		[HttpPost("question")]
-		public async Task<QuestionAndHints> AddNewQuestion(QuestionAndHints newQuestion) 
-			=> await _admin.AddNewQuestionWithHints(newQuestion);
+		[HttpPost("questions")]
+		public async Task<QuestionAndHints> AddNewQuestion(QuestionAndHints newQuestion, [FromHeader] string firebaseId) 
+			=> await _admin.AddNewQuestionWithHints(newQuestion, firebaseId);
+
+		[HttpGet("questions")]
+		public async Task<IEnumerable<QuestionAndHints>> GetAllQuestionsAndHints([FromHeader] string firebaseId)
+			=> await _admin.GetAllQuestionsAndHints(firebaseId);
     }
 }

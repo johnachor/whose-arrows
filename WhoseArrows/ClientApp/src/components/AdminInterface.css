@@ -1,0 +1,7 @@
+﻿.AdminInterface img {
+	max-height: 200px;
+}
+
+.AdminInterface td {
+	border: 1px solid black;
+}
