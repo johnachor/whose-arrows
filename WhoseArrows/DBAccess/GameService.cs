@@ -170,6 +170,20 @@ namespace WhoseArrows.DBAccess
 			}
 		}
 
+		public async Task<GameState> CheckGameState (long sessionId)
+		{
+			using (var db = SQLConnectionFactory.New())
+			{
+				var questionCountString = @"SELECT s.SessionLength, count(QuestionId) Answered
+											FROM Sessions s
+											JOIN SessionQuestion sq ON sq.SessionId = s.SessionId
+											WHERE s.SessionId = 12 AND sq.GivenAnswer IS NOT NULL
+											GROUP BY s.SessionLength";
+
+				return await db.QueryFirstOrDefaultAsync<GameState>(questionCountString, new { sessionId });
+			}
+		}
+
 		public async Task<NewQuestionResponse> PlayerGuess(Guess guess)
 		{
 			if (await AddAnswerToSessionQuestion(guess))
