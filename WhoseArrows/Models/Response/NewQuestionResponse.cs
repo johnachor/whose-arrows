@@ -10,5 +10,7 @@ namespace WhoseArrows.Models.Response
 		public long QuestionId { get; set; }
 		public string ImageUrl { get; set; }
 		public string SerializedSteps { get; set; }
+		public int CurrentScore { get; set; } = 0;
+		public long SessionQuestionId { get; set; }
 	}
 }
