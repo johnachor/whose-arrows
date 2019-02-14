@@ -12,6 +12,8 @@ namespace WhoseArrows.DBAccess
 {
 	public class GameService : IGameService
 	{
+		private static Random rng = new Random();
+
 		public async Task<Player> AddNewPlayer (NewPlayerRequest newPlayer)
 		{
 			using (var db = SQLConnectionFactory.New())
@@ -31,10 +33,10 @@ namespace WhoseArrows.DBAccess
 			using (var db = SQLConnectionFactory.New())
 			{
 				var newSessionString = @"INSERT INTO Sessions 
-												(SessionGuid, PlayerId, AnonPlayerName, SessionLength)
+												(SessionGuid, PlayerId, SessionLength)
 											OUTPUT INSERTED.*
 											VALUES
-												(NEWID(), @PlayerId, @AnonPlayerName, @SessionLength";
+												(NEWID(), @PlayerId, @SessionLength)";
 
 				return await db.QueryFirstOrDefaultAsync<Session>(newSessionString, newSession);
 			}
@@ -110,6 +112,90 @@ namespace WhoseArrows.DBAccess
 			else
 			{
 				return await AddNewPlayer(new NewPlayerRequest { Name = "John", FirebaseId = firebaseId });
+			}
+		}
+
+		public async Task<FirstQuestion> BeginGame(Session newSession)
+		{
+			var fq = new FirstQuestion();
+
+			fq.Session = await AddNewSession(newSession);
+			fq.Question = await GetNextQuestion(fq.Session.SessionId);
+
+			return fq;
+		}
+
+		public async Task<NewQuestionResponse> GetNextQuestion(long sessionId)
+		{
+			using (var db = SQLConnectionFactory.New())
+			{
+				var remainingQuestionsString = @"SELECT q.* FROM Questions q
+													LEFT JOIN (
+														SELECT * FROM SessionQuestion
+														WHERE SessionId = @sessionId
+													) sq
+													ON sq.QuestionId = q.QuestionId
+													WHERE SessionQuestionId IS NULL";
+
+				var remainingQuestions = await db.QueryAsync<NewQuestionResponse>(remainingQuestionsString, new { sessionId });
+				var nextQuestion = remainingQuestions.ElementAt(rng.Next(remainingQuestions.Count()));
+				nextQuestion.CurrentScore = await GetScore(sessionId);
+				var sq = await AddNewSessionQuestion(new SessionQuestion() { SessionId = sessionId, QuestionId = nextQuestion.QuestionId });
+				nextQuestion.SessionQuestionId = sq.SessionQuestionId;
+
+				return nextQuestion;
+			}
+		}
+
+		public async Task<int> GetScore(long sessionId)
+		{
+			using (var db = SQLConnectionFactory.New())
+			{
+				var scoreString = @"SELECT COUNT(CorrectAnswer) * 10 - SUM(HintsShown) * 3 Score 
+										FROM Sessions s
+										JOIN SessionQuestion sq ON sq.SessionId = s.SessionId
+										JOIN Questions q ON sq.GivenAnswer = q.CorrectAnswer AND sq.QuestionId = q.QuestionId
+										WHERE s.SessionId = @sessionId
+										GROUP BY s.SessionId";
+
+				return await db.QueryFirstOrDefaultAsync<int>(scoreString, new { sessionId });
+			}
+		}
+
+		public async Task<bool> AddAnswerToSessionQuestion(Guess guess)
+		{
+			using (var db = SQLConnectionFactory.New())
+			{
+				return await db.ExecuteAsync("UPDATE SessionQuestion SET GivenAnswer = @GivenAnswer WHERE SessionQuestionId = @SessionQuestionId", guess) == 1;
+			}
+		}
+
+		public async Task<NewQuestionResponse> PlayerGuess(Guess guess)
+		{
+			if (await AddAnswerToSessionQuestion(guess))
+			{
+				return await GetNextQuestion(guess.SessionId);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public async Task<IEnumerable<SessionScore>> GetHighScores(int sessionLength)
+		{
+			using (var db = SQLConnectionFactory.New())
+			{
+				var highScoreString = @"SELECT TOP 20 p.Name, s.SessionId, COUNT(CorrectAnswer) * 10 - SUM(HintsShown) * 3 Score 
+										FROM Sessions s
+										JOIN SessionQuestion sq ON sq.SessionId = s.SessionId
+										JOIN Questions q ON sq.GivenAnswer = q.CorrectAnswer AND sq.QuestionId = q.QuestionId
+										JOIN Players p ON p.PlayerId = s.PlayerId
+										WHERE s.SessionLength = @sessionLength
+										GROUP BY p.Name, s.SessionId
+										ORDER BY Score DESC";
+
+				return await db.QueryAsync<SessionScore>(highScoreString, new { sessionLength });
 			}
 		}
 	}

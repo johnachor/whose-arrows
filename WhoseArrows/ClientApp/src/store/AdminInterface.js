@@ -34,7 +34,6 @@ export const actionCreators = {
 }
 
 export const reducer = (state, action) => {
-	console.log(action);
 	state = state || initialState;
 
 	switch (action.type) {

@@ -21,9 +21,10 @@ namespace WhoseArrows.DBAccess.Interface
 
 		// Other operations
 		Task<Player>					Login				(string firebaseId);
-//		Task<NewQuestionResponse>		PlayerGuess			(long sessionQuestionId, long songId);
+		Task<FirstQuestion>				BeginGame			(Session newSession);
+		Task<NewQuestionResponse>		PlayerGuess			(Guess guess);
 //		Task<Hint>						GetHint				(long sessionQuestionId);
-//		Task<Session>					AddPlayerIdToSession(long sessionId, long playerId);
-//		Task<IEnumerable<HighScore>>	GetHighScores		(int sessionLength);
+		Task<int>				GetScore			(long sessionId);
+		Task<IEnumerable<SessionScore>>	GetHighScores		(int sessionLength);
 	}
 }
