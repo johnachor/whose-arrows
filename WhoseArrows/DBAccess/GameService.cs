@@ -170,7 +170,7 @@ namespace WhoseArrows.DBAccess
 			}
 		}
 
-		public async Task<bool> CheckGameCompletion (long sessionId)
+		public async Task<GameState> CheckGameState (long sessionId)
 		{
 			using (var db = SQLConnectionFactory.New())
 			{
@@ -180,9 +180,7 @@ namespace WhoseArrows.DBAccess
 											WHERE s.SessionId = 12 AND sq.GivenAnswer IS NOT NULL
 											GROUP BY s.SessionLength";
 
-				var gameState = await db.QueryFirstOrDefaultAsync<GameState>(questionCountString, new { sessionId });
-
-				return gameState.Answered == gameState.SessionLength;
+				return await db.QueryFirstOrDefaultAsync<GameState>(questionCountString, new { sessionId });
 			}
 		}
 
