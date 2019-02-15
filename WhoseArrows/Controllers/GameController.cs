@@ -14,7 +14,7 @@ using WhoseArrows.Models.Response;
 namespace WhoseArrows.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController, Authorize]
     public class GameController : ControllerBase
     {
 		private static IGameService _game = new GameService();

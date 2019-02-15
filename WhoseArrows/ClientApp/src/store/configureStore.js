@@ -5,6 +5,7 @@ import axiosMiddleware from 'redux-axios-middleware';
 import persistState from 'redux-localstorage';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 import * as Auth from './Auth';
+import * as Game from './Game';
 import * as Songs from './Songs';
 import * as AdminInterface from './AdminInterface';
 
@@ -37,7 +38,8 @@ export default function configureStore(history, initialState) {
 	const reducers = {
 		auth: Auth.reducer,
 		songs: Songs.reducer,
-		admin: AdminInterface.reducer
+		admin: AdminInterface.reducer,
+		game: Game.reducer
 	};
 
 	const middleware = [
