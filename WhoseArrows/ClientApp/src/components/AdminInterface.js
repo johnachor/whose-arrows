@@ -1,25 +1,29 @@
 ﻿import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { actionCreators } from '../store/AdminInterface';
+import * as AdminStore from '../store/AdminInterface';
+import * as SongsStore from '../store/Songs';
 import { Button } from 'react-bootstrap';
 import './AdminInterface.css';
 import storageService from '../firebase';
+import Select from 'react-select';
 
 class AdminInterface extends React.Component {
 
 	state = {
 		selectedFile: null,
-		imageUrl: '',
+		dropdownSelection: null,
 		submission: {
 			correctAnswer: 0,
 			hint1: '',
 			hint2: ''
 		}
+
 	}
 
 	componentDidMount() {
 		this.props.retrieveQuestions();
+		this.props.getSongs();
 	}
 
 	getQuestions = e => {
@@ -35,6 +39,12 @@ class AdminInterface extends React.Component {
 		const { submission } = { ...this.state };
 		submission[e.target.id] = e.target.value;
 		this.setState({ submission: submission });
+	}
+
+	handleDropdownChange = selectedOption => {
+		const submission = { ...this.state.submission };
+		submission.correctAnswer = selectedOption.value;
+		this.setState({ submission, dropdownSelection: selectedOption });
 	}
 
 	handleFileUploadSubmit = e => {
@@ -66,11 +76,11 @@ class AdminInterface extends React.Component {
 			]
 		}
 
-		this.props.addNewQuestion(newQuestion);
+		this.props.addNewQuestion(newQuestion).then(this.props.retrieveQuestions);
 	}
 
 	deleteQuestion = (questionId) => {
-		this.props.deleteQuestion(questionId);
+		this.props.deleteQuestion(questionId).then(this.props.retrieveQuestions);
 	}
 
 	render() {
@@ -100,7 +110,9 @@ class AdminInterface extends React.Component {
 				<h2>Add Question</h2>
 				<div id="questionBuilder">
 					<input onChange={this.handleFileChange} type="file" className="file-select" accept="image/*" />
-					<label>Correct Answer</label><input id="correctAnswer" type="number" onChange={this.handleInputChange} value={this.state.submission.correctAnswer} /><br />
+					<label>Correct Answer</label>
+					<Select value={this.state.dropdownSelection} onChange={this.handleDropdownChange} options={this.props.songs.songs.map(x => ({ value: x.songId, label: (x.titleRomanized || x.title) + ' - ' + x.artist }))} />
+					<br />
 					<label>Hint 1</label><input id="hint1" type="text" value={this.state.submission.hint1} onChange={this.handleInputChange} /><br />
 					<label>Hint 2</label><input id="hint2" type="text" value={this.state.submission.hint2} onChange={this.handleInputChange} /><br />
 					<button onClick={this.handleFileUploadSubmit}>Add Question</button>
@@ -110,7 +122,21 @@ class AdminInterface extends React.Component {
 	}
 }
 
+const mapStateToProps = (state, ownProps) => {
+	return {
+		...state.admin,
+		songs: state.songs
+	}
+}
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		...bindActionCreators(AdminStore.actionCreators, dispatch),
+		...bindActionCreators(SongsStore.actionCreators, dispatch)
+	}
+}
+
 export default connect(
-	state => state.admin,
-	dispatch => bindActionCreators(actionCreators, dispatch)
+	mapStateToProps,
+	mapDispatchToProps
 )(AdminInterface);
