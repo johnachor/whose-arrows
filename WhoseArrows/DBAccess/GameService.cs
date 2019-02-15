@@ -131,8 +131,6 @@ namespace WhoseArrows.DBAccess
 			{
 				var gameState = await CheckGameState(sessionId);
 
-				if (gameState.Answered == gameState.SessionLength) return null;
-
 				var remainingQuestionsString = @"SELECT q.* FROM Questions q
 													LEFT JOIN (
 														SELECT * FROM SessionQuestion
@@ -144,9 +142,16 @@ namespace WhoseArrows.DBAccess
 				var remainingQuestions = await db.QueryAsync<NewQuestionResponse>(remainingQuestionsString, new { sessionId });
 				var nextQuestion = remainingQuestions.ElementAt(rng.Next(remainingQuestions.Count()));
 				nextQuestion.CurrentScore = await GetScore(sessionId);
-				var sq = await AddNewSessionQuestion(new SessionQuestion() { SessionId = sessionId, QuestionId = nextQuestion.QuestionId });
-				nextQuestion.SessionQuestionId = sq.SessionQuestionId;
 
+				if (gameState != default(GameState) && (gameState.Answered == gameState.SessionLength))
+				{
+					nextQuestion.GameComplete = true;
+				}
+				else
+				{
+					var sq = await AddNewSessionQuestion(new SessionQuestion() { SessionId = sessionId, QuestionId = nextQuestion.QuestionId });
+					nextQuestion.SessionQuestionId = sq.SessionQuestionId;
+				}
 				return nextQuestion;
 			}
 		}
@@ -181,7 +186,7 @@ namespace WhoseArrows.DBAccess
 				var questionCountString = @"SELECT s.SessionLength, count(QuestionId) Answered
 											FROM Sessions s
 											JOIN SessionQuestion sq ON sq.SessionId = s.SessionId
-											WHERE s.SessionId = 12 AND sq.GivenAnswer IS NOT NULL
+											WHERE s.SessionId = @sessionId AND sq.GivenAnswer IS NOT NULL
 											GROUP BY s.SessionLength";
 
 				return await db.QueryFirstOrDefaultAsync<GameState>(questionCountString, new { sessionId });
