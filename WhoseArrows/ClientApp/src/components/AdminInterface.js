@@ -18,6 +18,10 @@ class AdminInterface extends React.Component {
 		}
 	}
 
+	componentDidMount() {
+		this.props.retrieveQuestions();
+	}
+
 	getQuestions = e => {
 		e.preventDefault();
 		this.props.retrieveQuestions();
@@ -42,14 +46,14 @@ class AdminInterface extends React.Component {
 			console.log(error);
 		}, () => {
 			// Do something once upload is complete
-			storageService.ref(`images/${this.state.selectedFile.name}`).getDownloadURL().then(url => this.setState({imageUrl: url}));
+			storageService.ref(`images/${this.state.selectedFile.name}`).getDownloadURL().then(this.handleQuestionSubmit);
 		});
 	}
 
-	handleQuestionSubmit = e => {
+	handleQuestionSubmit = url => {
 		const newQuestion = {
 			correctAnswer: this.state.submission.correctAnswer,
-			imageUrl: this.state.imageUrl,
+			imageUrl: url,
 			hints: [
 				{
 					hintOrder: 1,
@@ -65,14 +69,22 @@ class AdminInterface extends React.Component {
 		this.props.addNewQuestion(newQuestion);
 	}
 
+	deleteQuestion = (questionId) => {
+		this.props.deleteQuestion(questionId);
+	}
+
 	render() {
+		const renderHint = (hint) => {
+			return (<p>{hint.hintOrder}: {hint.hintText}</p>);
+		}
 
 		const questionTableRows = this.props.questions.map(x => {
 			return (<tr key={x.questionId}>
 				<td>{x.questionId}</td>
 				<td>{x.correctAnswer}</td>
-				<td>{JSON.stringify(x.hints)}</td>
+				<td>Hints: <br />{x.hints.map(renderHint)}</td>
 				<td><img src={x.imageUrl} /></td>
+				<td><button onClick={() => this.deleteQuestion(`${x.questionId}`)}>Delete</button></td>
 			</tr>);
 		});
 
@@ -85,16 +97,13 @@ class AdminInterface extends React.Component {
 					</tr></thead>
 					<tbody>{questionTableRows}</tbody>
 				</table>
-				<div id="filesubmit">
-					<input onChange={this.handleFileChange} type="file" className="file-select" accept="image/*" />
-					<button className="file-submit" onClick={this.handleFileUploadSubmit}>SUBMIT</button>
-				</div>
+				<h2>Add Question</h2>
 				<div id="questionBuilder">
-					<label>Image URL</label><input type="text" readOnly value={this.state.imageUrl} /><br />
+					<input onChange={this.handleFileChange} type="file" className="file-select" accept="image/*" />
 					<label>Correct Answer</label><input id="correctAnswer" type="number" onChange={this.handleInputChange} value={this.state.submission.correctAnswer} /><br />
 					<label>Hint 1</label><input id="hint1" type="text" value={this.state.submission.hint1} onChange={this.handleInputChange} /><br />
 					<label>Hint 2</label><input id="hint2" type="text" value={this.state.submission.hint2} onChange={this.handleInputChange} /><br />
-					<button onClick={this.handleQuestionSubmit}>Add Question</button>
+					<button onClick={this.handleFileUploadSubmit}>Add Question</button>
 				</div>
 			</div>
 		);

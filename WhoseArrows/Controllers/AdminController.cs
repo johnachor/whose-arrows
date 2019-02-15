@@ -22,6 +22,10 @@ namespace WhoseArrows.Controllers
 		public async Task<QuestionAndHints> AddNewQuestion(QuestionAndHints newQuestion, [FromHeader] string firebaseId) 
 			=> await _admin.AddNewQuestionWithHints(newQuestion, firebaseId);
 
+		[HttpDelete("questions/{id}")]
+		public async Task<Question> DeleteQuestion(long id)
+			=> await _admin.DeleteQuestion(id);
+
 		[HttpGet("questions")]
 		public async Task<IEnumerable<QuestionAndHints>> GetAllQuestionsAndHints([FromHeader] string firebaseId)
 			=> await _admin.GetAllQuestionsAndHints(firebaseId);
