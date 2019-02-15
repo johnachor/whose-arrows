@@ -35,6 +35,8 @@ namespace WhoseArrows.Controllers
 		public async Task<IEnumerable<SessionScore>> GetHighScores()
 			=> await _game.GetHighScores(5);
 
-
+		[HttpGet("hint/{id}")]
+		public async Task<Hint> GetHint(long id)
+			=> await _game.GetHint(id);
     }
 }

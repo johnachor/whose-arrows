@@ -23,7 +23,7 @@ namespace WhoseArrows.DBAccess.Interface
 		Task<Player>					Login				(string firebaseId);
 		Task<FirstQuestion>				BeginGame			(Session newSession);
 		Task<NewQuestionResponse>		PlayerGuess			(Guess guess);
-//		Task<Hint>						GetHint				(long sessionQuestionId);
+		Task<Hint>						GetHint				(long sessionQuestionId);
 		Task<int>						GetScore			(long sessionId);
 		Task<IEnumerable<SessionScore>>	GetHighScores		(int sessionLength);
 	}

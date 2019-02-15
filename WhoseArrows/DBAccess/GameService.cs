@@ -129,6 +129,10 @@ namespace WhoseArrows.DBAccess
 		{
 			using (var db = SQLConnectionFactory.New())
 			{
+				var gameState = await CheckGameState(sessionId);
+
+				if (gameState.Answered == gameState.SessionLength) return null;
+
 				var remainingQuestionsString = @"SELECT q.* FROM Questions q
 													LEFT JOIN (
 														SELECT * FROM SessionQuestion
@@ -181,6 +185,24 @@ namespace WhoseArrows.DBAccess
 											GROUP BY s.SessionLength";
 
 				return await db.QueryFirstOrDefaultAsync<GameState>(questionCountString, new { sessionId });
+			}
+		}
+
+		public async Task<Hint> GetHint(long sessionQuestionId)
+		{
+			using (var db = SQLConnectionFactory.New())
+			{
+				var getHintString = @"UPDATE SessionQuestion
+										SET HintsShown = (HintsShown + 1)
+										WHERE SessionQuestionId = @sessionQuestionId
+
+										SELECT h.*
+										FROM SessionQuestion sq
+										JOIN Questions q ON sq.QuestionId = q.QuestionId
+										JOIN Hints h ON h.QuestionId = sq.QuestionId
+										WHERE h.HintOrder = sq.HintsShown AND sq.SessionQuestionId = @sessionQuestionId";
+
+				return await db.QueryFirstOrDefaultAsync<Hint>(getHintString, new { sessionQuestionId });
 			}
 		}
 
