@@ -12,5 +12,6 @@ namespace WhoseArrows.Models.Response
 		public string SerializedSteps { get; set; }
 		public int CurrentScore { get; set; } = 0;
 		public long SessionQuestionId { get; set; }
+		public bool GameComplete { get; set; }
 	}
 }
