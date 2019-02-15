@@ -2,8 +2,8 @@
 import thunk from 'redux-thunk';
 import axios from 'axios';
 import axiosMiddleware from 'redux-axios-middleware';
+import persistState from 'redux-localstorage';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
-import reduxImmutableStateInvariant from 'redux-immutable-state-invariant';
 import * as Auth from './Auth';
 import * as Songs from './Songs';
 import * as AdminInterface from './AdminInterface';

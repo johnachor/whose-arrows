@@ -2,6 +2,7 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { actionCreators } from '../store/Auth';
+import firebase from 'firebase';
 
 class AuthForm extends React.Component {
 
@@ -61,7 +62,6 @@ class AuthForm extends React.Component {
 							}
 							<button onClick={this.submitLogin} className="btn btn-primary">Login</button>
 							<button onClick={this.submitRegister} className="btn btn-primary">Register</button>
-							<button onClick={this.apiLogin} className="btn btn-primary">API Login</button>
 						</form>
 					</div>
 				</div>

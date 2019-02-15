@@ -9,7 +9,7 @@ const NavMenu = props => (
 	<Navbar inverse fixedTop fluid collapseOnSelect>
 		<Navbar.Header>
 			<Navbar.Brand>
-				<Link to={'/'}>WhoseArrows</Link>
+				<Link to={props.user.uid ? '/game' : '/auth'}>WhoseArrows</Link>
 			</Navbar.Brand>
 			<Navbar.Toggle />
 		</Navbar.Header>
@@ -20,27 +20,22 @@ const NavMenu = props => (
 						<Glyphicon glyph='user' /> Auth
 					</NavItem>
 				</LinkContainer>
-				<LinkContainer to={'/game'}>
-					<NavItem>
-						<Glyphicon glyph='arrow-left' />
-						<Glyphicon glyph='arrow-down' />
-						<Glyphicon glyph='arrow-up' />
-						<Glyphicon glyph='arrow-right' />
-						Game
-					</NavItem>
-				</LinkContainer>
-				<LinkContainer to={'/highscores'}>
-					<NavItem>
-						<Glyphicon glyph='list-alt' /> High Scores
-					</NavItem>
-				</LinkContainer>
-				{props.user.uid
-					? <LinkContainer to={'/mystats'}>
+				{props.player.firebaseId
+					? <LinkContainer to={'/game'}>
 						<NavItem>
-							<Glyphicon glyph='user' /> My Stats
-						</NavItem>
-					</LinkContainer>
-					: null}
+							<Glyphicon glyph='arrow-left' />
+							<Glyphicon glyph='arrow-down' />
+							<Glyphicon glyph='arrow-up' />
+							<Glyphicon glyph='arrow-right' />
+							Game
+					</NavItem>
+					</LinkContainer> : null}
+				{props.player.firebaseId
+					? <LinkContainer to={'/highscores'}>
+						<NavItem>
+							<Glyphicon glyph='list-alt' /> High Scores
+					</NavItem>
+					</LinkContainer> : null}
 				{props.player.isAdmin ?
 					<LinkContainer to={'/admin'}>
 						<NavItem>

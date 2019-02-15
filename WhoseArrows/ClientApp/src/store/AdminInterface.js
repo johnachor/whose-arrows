@@ -30,6 +30,18 @@ export const actionCreators = {
 				}
 			}
 		};
+	},
+
+	deleteQuestion: (questionId) => {
+		return {
+			type: 'DELETE_QUESTION',
+			payload: {
+				request: {
+					method: 'delete',
+					url: `admin/questions/${questionId}`
+				}
+			}
+		}
 	}
 }
 

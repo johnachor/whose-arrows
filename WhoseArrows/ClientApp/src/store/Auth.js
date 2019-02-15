@@ -10,13 +10,25 @@ const initialState = {
 	isLoading: false
 };
 
-
 export const actionCreators = {
 	login: (email, password) => (dispatch, getState) => {
 		dispatch({ type: loginType });
 
 		firebase.auth().signInWithEmailAndPassword(email, password)
-			.then(response => dispatch({ type: authType, response }))
+			.then(response => {
+				dispatch({ type: authType, response });
+				if (response.user) {
+					dispatch({
+						type: apiLoginType,
+						payload: {
+							request: {
+								method: 'post',
+								url: 'game/login'
+							}
+						}
+					});
+				}
+			})
 			.catch(() => dispatch({ type: logoutType }));
 	},
 
@@ -29,21 +41,9 @@ export const actionCreators = {
 	},
 
 	logout: () => (dispatch) => {
-		firebase.signOut();
+		firebase.auth().signOut();
 		dispatch(logoutType);
 	},
-
-	apiLogin: () => {
-		return {
-			type: apiLoginType,
-			payload: {
-				request: {
-					method: 'post',
-					url: 'game/login'
-				}
-			}
-		};
-	}
 };
 
 export const reducer = (state, action) => {
